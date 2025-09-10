@@ -7,8 +7,17 @@ const port = process.env.PORT || 3000;
 const token = process.env.BOT_TOKEN || '8108422649:AAENF0rHzy1GEekebaZgdRFMy6mtxJWvDmw';
 const ownerId = process.env.OWNER_ID || '6037132084';
 
-const bot = new TelegramBot(token, { polling: true });
+// Use Webhooks for production (on Render), fall back to polling for local development
+const bot = new TelegramBot(token, {
+  polling: process.env.NODE_ENV !== 'production', // Will only poll if NOT in production
+  webHook: process.env.NODE_ENV === 'production' // Will use webhook if IN production
+});
 
+// If we are in production (on Render), set the webhook
+if (process.env.NODE_ENV === 'production') {
+  const webhookUrl = `https://my-telegram-bot-hiz4.onrender.com/bot${token}`;
+  bot.setWebHook(webhookUrl);
+}
 // Handle data from Mini App
 bot.on('message', (msg) => {
     if (msg.web_app_data) {
