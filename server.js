@@ -57,7 +57,7 @@ bot.onText(/\/postlogin/, (msg) => {
                 inline_keyboard: [[
                     {
                         text: "CLICK HERE TO LOGIN",
-                        web_app: { url: `https://your-glitch-project-name.glitch.me` } // ← You will change this later
+                        web_app: { url: `https://my-telegram-bot-hiz4.onrender.com` } // ← You will change this later
                     }
                 ]]
             }
