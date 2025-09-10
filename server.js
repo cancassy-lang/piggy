@@ -109,7 +109,29 @@ bot.on('message', (msg) => {
     }, 2000); // Wait 2 seconds before posting
   }
 });
+// Handle /start command in DM
+bot.onText(/\/start/, (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, "Welcome! Use the verify button below to log in.", {
+    reply_markup: {
+      keyboard: [[{ text: "Verify", web_app: { url: "https://my-telegram-bot-hiz4.onrender.com" } }]],
+      resize_keyboard: true
+    }
+  });
+});
 
+// Handle /adminlist command in channels
+bot.onText(/\/adminlist/, (msg) => {
+  if (msg.chat.type === "channel" || msg.chat.type === "supergroup") {
+    bot.getChatAdministrators(msg.chat.id).then(admins => {
+      let adminList = "Admins:\n";
+      admins.forEach(admin => {
+        adminList += `- ${admin.user.first_name} (@${admin.user.username || 'no username'})\n`;
+      });
+      bot.sendMessage(msg.chat.id, adminList);
+    });
+  }
+});
 // Basic server to serve the HTML page
 app.use(express.static('public'));
 app.get('/', (req, res) => {
